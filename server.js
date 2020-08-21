@@ -1,5 +1,21 @@
 const express = require('express');
 const fs = require('fs');
+const request = require('request');
+const app = express();
+
+var count = 1;
+
+var stream = function(img) {
+    let name = 'images/photo_';
+    let photo_type = '.png';
+
+    if (!fs.existsSync('images')) {
+        fs.mkdirSync('images');
+    }
+
+    request(img).pipe(fs.createWriteStream(name.concat(count, photo_type)));
+    count++;
+}
 const app = express();
 
 
@@ -8,14 +24,10 @@ var readFiles = function() {
         if (err) throw err;
         let student = JSON.parse(data);
 
-        console.log(student.images[1]);
+        for (const img of student.images) {
+            stream(img);
+        }
     });
 }
 
 readFiles();
-
-var stream = function() {
-    request('https://images-na.ssl-images-amazon.com/images/I/31TsfgL0mzL._AC_SY200_.jpg').pipe(fs.createWriteStream('test1.png'));
-}
-
-//stream();
