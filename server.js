@@ -16,6 +16,7 @@ function sleep(ms) {
     });
 }
 
+//Função responsável por baixar e salvar o conteúdo das imagens em arquivos enumerados com padrão photo_X.png
 var savePhotos = function(img) {
     let name = 'photo_';
     let photo_type = '.png';
@@ -23,6 +24,7 @@ var savePhotos = function(img) {
     request(img).pipe(fs.createWriteStream(name.concat(count, photo_type)));
 }
 
+//Função que lê o arquivo onde tem as URLs das fotos
 async function readImageFile(file) {
     fs.readFile(file, (err, data) => {
         if (err) throw err;
@@ -34,6 +36,7 @@ async function readImageFile(file) {
     });
 }
 
+//Função responsável por compactar os arquivos .png
 function compactPhotos(zip_file) {
     var output = fs.createWriteStream(zip_file);
     var archive = archiver('zip');
@@ -53,6 +56,7 @@ function compactPhotos(zip_file) {
     archive.finalize();
 }
 
+//Função que dá o conteúdo do arquivo ao frontend para que o usuário faça o download
 const getPhotoFiles = (req, res) => {
     const fs = require('fs');
     let photo = req.params.filename;
@@ -66,12 +70,14 @@ async function main() {
 }
 
 app.get('/', (req, res) => {
-    //compactPhotos(zip_photos);
+    compactPhotos(zip_photos);
     res.sendFile(__dirname + `/public/html/index.html`);
 });
 
+//Função que recebe o nome do arquivo requerido pelo frontend e o direciona para a função que pega seu conteúdo
 app.get('/download_photo/:filename', getPhotoFiles);
 
+//Aqui é pego o nome dos arquivos zip para ser entregue ao frontend
 app.get('/get_photos', (req, res) => {
     let files_ = [];
     fs.readdirSync(__dirname).forEach(file => {
@@ -82,6 +88,7 @@ app.get('/get_photos', (req, res) => {
     res.send(files_);
 });
 
+//Função que redireciona ao código do frontend
 app.use(express.static(__dirname + '/public'));
 
 app.listen(3000, () => {
