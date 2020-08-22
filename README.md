@@ -2,7 +2,7 @@
 
 ## Como rodar o projeto:
 
-- Instale o node na sua máquina;
+- Verifique se tem o node na sua máquina;
 
 - Verifique que não tem nenhum serviço ativo na porta 3000 do dispositivo, caso tenha modifique a linha 7 o número que vem depois de 'PORT' no arquivo package.json, localizado no diretório do projeto.
 
